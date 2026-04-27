@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>💍 Quer casar comigo? • Leticia & Jefferson</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0d0610;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ========== TELA INICIAL ESCURA ========== */
+        .overlay-dark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #1a0a14 0%, #0d0610 100%);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+        }
+
+        .overlay-dark.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .title-cinematic {
+            color: #ffe0e8;
+            font-size: 2rem;
+            letter-spacing: 5px;
+            animation: pulseText 2s infinite;
+            text-shadow: 0 0 30px #ff6b8a;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* ========== SCENE PRINCIPAL ========== */
+        .scene {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            color: #ffe0e8;
+            text-shadow: 0 0 25px #ff6b8a;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { text-shadow: 0 0 15px #ff6b8a; }
+            50% { text-shadow: 0 0 35px #ffb3c6, 0 0 60px #ff6b8a; }
+        }
+
+        /* ========== ENVELOPE ========== */
+        .envelope-wrapper {
+            position: relative;
+            width: 240px;
+            height: 170px;
+            cursor: pointer;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+            transition: transform 0.4s;
+        }
+        .envelope-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        .envelope-body {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 130px;
+            background: linear-gradient(160deg, #fce4e9, #e88da5);
+            border-radius: 8px 8px 12px 12px;
+            box-shadow: inset 0 -5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90px;
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .flap-triangle {
+            width: 0;
+            height: 0;
+            border-left: 120px solid transparent;
+            border-right: 120px solid transparent;
+            border-top: 85px solid #f0b4c5;
+            margin: 0 auto;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+        }
+        .envelope-wrapper.opened .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        .stamp-heart {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            font-size: 40px;
+            pointer-events: none;
+            animation: stampPulse 1.5s infinite;
+        }
+        @keyframes stampPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        .letter-inside {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 0;
+            background: #fffef9;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: height 0.9s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+            z-index: 0;
+            text-align: center;
+            padding: 0 12px;
+        }
+        .envelope-wrapper.opened .letter-inside {
+            height: 160px;
+            bottom: 80px;
+        }
+        .letter-content {
+            padding: 20px 8px;
+            opacity: 0;
+            transition: opacity 0.4s 0.6s;
+        }
+        .envelope-wrapper.opened .letter-content {
+            opacity: 1;
+        }
+        .letter-content h2 {
+            color: #d6335e;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        /* ========== BOTÕES ========== */
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .btn {
+            padding: 10px 25px;
+            border-radius: 25px;
+            border: none;
+            font-weight: bold;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-yes {
+            background: #ff2d55;
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 45, 85, 0.6);
+        }
+        .btn-yes:active {
+            transform: scale(0.9);
+        }
+        .btn-no {
+            background: #eee;
+            color: #666;
+            position: relative;
+        }
+
+        /* ========== CERTIDÃO ========== */
+        .certificate {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: #fffef5;
+            padding: 25px;
+            border-radius: 20px;
+            width: 320px;
+            max-width: 90vw;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+            z-index: 30;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid #f4a3b8;
+        }
+        .certificate.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .certificate h2 {
+            color: #d6335e;
+            margin-bottom: 10px;
+        }
+        .certificate .names {
+            font-size: 1.8rem;
+            color: #b0305a;
+            font-weight: bold;
+        }
+        .certificate .date {
+            color: #7a5a6a;
+            margin: 8px 0;
+        }
+        .photo-frame {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 15px auto;
+            border: 3px solid #f4a3b8;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .big-heart {
+            font-size: 60px;
+            animation: beat 0.8s infinite;
+        }
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* ========== FLORES ========== */
+        .flower {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            animation: fall linear forwards;
+            z-index: 25;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-60px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* overlay escuro para certidão */
+        .cert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 25;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.5s;
+        }
+        .cert-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        @media (max-width: 400px) {
+            .envelope-wrapper {
+                width: 200px;
+                height: 150px;
+            }
+            .envelope-body {
+                height: 110px;
+            }
+            .flap-triangle {
+                border-left: 100px solid transparent;
+                border-right: 100px solid transparent;
+                border-top: 70px solid #f0b4c5;
+            }
+            .letter-inside {
+                width: 160px;
+            }
+            .envelope-wrapper.opened .letter-inside {
+                height: 130px;
+                bottom: 55px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TELA ESCURA INICIAL -->
+<div class="overlay-dark" id="overlayDark">
+    <div class="title-cinematic">💌 Abra a carta...</div>
+</div>
+
+<div class="scene">
+    <p class="question-text" id="questionText">💌 Quer abrir a carta? 💌</p>
+
+    <div class="envelope-wrapper" id="envelope">
+        <div class="stamp-heart">❤️</div>
+        <div class="envelope-flap">
+            <div class="flap-triangle"></div>
+        </div>
+        <div class="envelope-body"></div>
+        <div class="letter-inside" id="letterInside">
+            <div class="letter-content">
+                <h2>💍 Quer casar comigo?</h2>
+                <div class="buttons">
+                    <button class="btn btn-yes" id="btnYes">SIM 💖</button>
+                    <button class="btn btn-no" id="btnNo">Não 😢</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CERTIDÃO OVERLAY -->
+<div class="cert-overlay" id="certOverlay"></div>
+
+<!-- CERTIFICADO DE CASAMENTO COM FOTO -->
+<div class="certificate" id="certificate">
+    <h2>💍 Certidão de Casamento 💍</h2>
+    <p>Que hoje, <span id="currentDate"></span>,<br>seja eternizado este amor:</p>
+    <div class="names">Leticia ❤️ Jefferson</div>
+
+    <!-- FOTO DO CASAL (CORRIGIDA) -->
+    <div class="photo-frame">
+        <img src="ChatGPT Image 26 de abr. de 2026, 22_41_19.png" alt="Leticia e Jefferson">
+    </div>
+
+    <div class="big-heart">❤️</div>
+    <p style="margin-top:10px;color:#b0305a;">E assim começam os eternos capítulos de um amor sem fim.</p>
+</div>
+
+<script>
+    (function() {
+        const overlayDark = document.getElementById('overlayDark');
+        const envelope = document.getElementById('envelope');
+        const btnYes = document.getElementById('btnYes');
+        const btnNo = document.getElementById('btnNo');
+        const certificate = document.getElementById('certificate');
+        const certOverlay = document.getElementById('certOverlay');
+        const questionText = document.getElementById('questionText');
+
+        const today = new Date();
+        const options = { day: '2-digit', month: 'long', year: 'numeric' };
+        document.getElementById('currentDate').textContent = today.toLocaleDateString('pt-BR', options);
+
+        let opened = false;
+        let flowerInterval = null;
+
+        // Remove tela escura ao primeiro clique/toque
+        document.body.addEventListener('click', function initialTouch() {
+            overlayDark.classList.add('hidden');
+            document.body.removeEventListener('click', initialTouch);
+        }, { once: true });
+
+        // Abrir envelope ao clicar
+        envelope.addEventListener('click', () => {
+            if (!opened) {
+                envelope.classList.add('opened');
+                opened = true;
+                questionText.style.opacity = '0';
+            }
+        });
+
+        // Botão SIM
+        btnYes.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!opened) return;
+            showCertificate();
+        });
+
+        // Botão NÃO foge (no celular: toque e mouse)
+        function moveButtonAway() {
+            if (!opened) return;
+            const btn = btnNo;
+            const maxX = window.innerWidth - btn.offsetWidth - 20;
+            const maxY = window.innerHeight - btn.offsetHeight - 20;
+            const newX = Math.random() * maxX;
+            const newY = Math.random() * maxY;
+            btn.style.position = 'fixed';
+            btn.style.left = newX + 'px';
+            btn.style.top = newY + 'px';
+            btn.style.zIndex = '50';
+        }
+
+        btnNo.addEventListener('mouseover', moveButtonAway);
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveButtonAway();
+        });
+        btnNo.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!opened) return;
+            // só foge
+        });
+
+        function showCertificate() {
+            certOverlay.classList.add('show');
+            certificate.classList.add('show');
+            startFlowerRain();
+            envelope.style.display = 'none';
+            questionText.style.display = 'none';
+            btnNo.style.display = 'none';
+        }
+
+        certOverlay.addEventListener('click', () => {
+            certOverlay.classList.remove('show');
+            certificate.classList.remove('show');
+            stopFlowerRain();
+            document.querySelectorAll('.flower').forEach(f => f.remove());
+        });
+
+        function startFlowerRain() {
+            const flowers = ['🌸', '🌺', '🌷', '💐', '🌼', '🪷', '❤️', '💍'];
+            function createFlower() {
+                const flower = document.createElement('div');
+                flower.className = 'flower';
+                flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+                flower.style.left = Math.random() * 100 + 'vw';
+                flower.style.animationDuration = (Math.random() * 3 + 2.5) + 's';
+                flower.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                document.body.appendChild(flower);
+                setTimeout(() => flower.remove(), 5000);
+            }
+            for (let i = 0; i < 10; i++) {
+                setTimeout(createFlower, i * 100);
+            }
+            flowerInterval = setInterval(createFlower, 250);
+        }
+
+        function stopFlowerRain() {
+            if (flowerInterval) {
+                clearInterval(flowerInterval);
+                flowerInterval = null;
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (btnNo.style.position === 'fixed') {
+                const maxX = window.innerWidth - btnNo.offsetWidth - 20;
+                const maxY = window.innerHeight - btnNo.offsetHeight - 20;
+                btnNo.style.left = Math.min(parseInt(btnNo.style.left), maxX) + 'px';
+                btnNo.style.top = Math.min(parseInt(btnNo.style.top), maxY) + 'px';
+            }
+        });
+    })();
+</script>
+</body>
+</html>
